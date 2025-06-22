@@ -1,192 +1,61 @@
-# Ride Admin Panel
+# Campus Ride Admin
 
-This is the full admin panel source code.
+Campus Ride Admin is a modern React-based admin dashboard for managing campus ride zones, riders, and related data. It features a clean UI, responsive design, and easy extensibility.
 
-=======
+## Features
 
-# campus_ride React - Free React Tailwind Admin Dashboard Template
+- Zone management (create, view, list)
+- Rider management (create, view, list)
+- File uploads with previews
+- Dynamic tables with search
+- Mobile-friendly responsive layout
+- Dark mode support
 
-campus_ride is a free and open-source admin dashboard template built on **React and Tailwind CSS**, providing developers
-with everything they need to create a comprehensive, data-driven back-end,
-dashboard, or admin panel solution for upcoming web projects.
+## Tech Stack
 
-With campus_ride, you get access to all the necessary dashboard UI components, elements, and pages required to build a
-feature-rich and complete dashboard or admin panel. Whether you're building dashboard or admin panel for a complex web
-application or a simple website, campus_ride is the perfect solution to help you get up and running quickly.
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Router](https://reactrouter.com/)
+- [React Toastify](https://fkhadra.github.io/react-toastify/)
 
-![campus_ride React.js Dashboard Preview](./banner.png)
+## Getting Started
 
-## Overview
+1. **Clone the repository:**
 
-campus_ride provides essential UI components and layouts for building feature-rich, data-driven admin dashboards and
-control panels. It's built on:
+   ```sh
+   git clone https://github.com/your-username/campus-ride-admin.git
+   cd campus-ride-admin
+   ```
 
-- React 19
-- TypeScript
-- Tailwind CSS
+2. **Install dependencies:**
 
-### Quick Links
-
-- [✨ Visit Website](https://campus_ride.com)
-- [📄 Documentation](https://campus_ride.com/docs)
-- [⬇️ Download](https://campus_ride.com/download)
-- [🖌️ Figma Design File (Community Edition)](https://www.figma.com/community/file/1214477970819985778)
-- [⚡ Get PRO Version](https://campus_ride.com/pricing)
-
-### Demos
-
-- [Free Version](https://free-react-demo.campus_ride.com/)
-- [Pro Version](https://react-demo.campus_ride.com)
-
-### Other Versions
-
-- [HTML Version](https://github.com/campus_ride/campus_ride-free-tailwind-dashboard-template)
-- [Next.js Version](https://github.com/campus_ride/free-nextjs-admin-dashboard)
-- [Vue.js Version](https://github.com/campus_ride/vue-tailwind-admin-dashboard)
-
-## Installation
-
-### Prerequisites
-
-To get started with campus_ride, ensure you have the following prerequisites installed and set up:
-
-- Node.js 18.x or later (recommended to use Node.js 20.x or later)
-
-### Cloning the Repository
-
-Clone the repository using the following command:
-
-```bash
-git clone https://github.com/campus_ride/free-react-tailwind-admin-dashboard.git
-```
-
-> Windows Users: place the repository near the root of your drive if you face issues while cloning.
-
-1. Install dependencies:
-
-   ```bash
+   ```sh
    npm install
-   # or
-   yarn install
    ```
 
-   > Use the `--legacy-peer-deps` flag, if you face issues while installing.
+3. **Start the development server:**
 
-2. Start the development server:
-   ```bash
+   ```sh
    npm run dev
-   # or
-   yarn dev
    ```
 
-## Components
+4. **Build for production:**
+   ```sh
+   npm run build
+   ```
 
-campus_ride is a pre-designed starting point for building a web-based dashboard using React.js and Tailwind CSS. The
-template includes:
+## Folder Structure
 
-- Sophisticated and accessible sidebar
-- Data visualization components
-- Prebuilt profile management and 404 page
-- Tables and Charts(Line and Bar)
-- Authentication forms and input elements
-- Alerts, Dropdowns, Modals, Buttons and more
-- Can't forget Dark Mode 🕶️
+- `src/pages/` — Main pages (Zone, Rider, etc.)
+- `src/components/` — Reusable UI components
+- `src/components/form/` — Form elements and form logic
+- `src/components/tables/` — Table components
 
-All components are built with React and styled using Tailwind CSS for easy customization.
+## Contributing
 
-## Feature Comparison
-
-### Free Version
-
-- 1 Unique Dashboard
-- 30+ dashboard components
-- 50+ UI elements
-- Basic Figma design files
-- Community support
-
-### Pro Version
-
-- 5 Unique Dashboards: Analytics, Ecommerce, Marketing, CRM, Stocks (more coming soon)
-- 400+ dashboard components and UI elements
-- Complete Figma design file
-- Email support
-
-To learn more about pro version features and pricing, visit our [pricing page](https://campus_ride.com/pricing).
-
-## Changelog
-
-### Version 2.0.2 - [March 25, 2025]
-
-- Upgraded to React 19
-- Included overrides for packages to prevent peer dependency errors.
-- Migrated from react-flatpickr to flatpickr package for React 19 support
-
-### Version 2.0.1 - [February 27, 2025]
-
-#### Update Overview
-
-- Upgraded to Tailwind CSS v4 for better performance and efficiency.
-- Updated class usage to match the latest syntax and features.
-- Replaced deprecated class and optimized styles.
-
-#### Next Steps
-
-- Run npm install or yarn install to update dependencies.
-- Check for any style changes or compatibility issues.
-- Refer to the Tailwind CSS v4 [Migration Guide](https://tailwindcss.com/docs/upgrade-guide) on this release. if needed.
-- This update keeps the project up to date with the latest Tailwind improvements. 🚀
-
-### Version 2.0.0 - [February 2025]
-
-A major update with comprehensive redesign and modern React patterns implementation.
-
-#### Major Improvements
-
-- Complete UI redesign with modern React patterns
-- New features: collapsible sidebar, chat, and calendar
-- Improved performance and accessibility
-- Updated data visualization using ApexCharts
-
-#### Key Features
-
-- Redesigned dashboards (Ecommerce, Analytics, Marketing, CRM)
-- Enhanced navigation with React Router integration
-- Advanced tables with sorting and filtering
-- Calendar with drag-and-drop support
-- New UI components and improved existing ones
-
-#### Breaking Changes
-
-- Updated sidebar component API
-- Migrated charts to ApexCharts
-- Revised authentication system
-
-[Read more](https://campus_ride.com/docs/update-logs/react) on this release.
-
-### Version 1.3.7 - [June 20, 2024]
-
-#### Enhancements
-
-1. Remove Repetition of DefaultLayout in every Pages
-2. Add ClickOutside Component for reduce repeated functionality in Header Message, Notification and User Dropdowns.
-
-### Version 1.3.6 - [Jan 31, 2024]
-
-#### Enhancements
-
-1. Integrate flatpickr in [Date Picker/Form Elements]
-2. Change color after select an option [Select Element/Form Elements].
-3. Make it functional [Multiselect Dropdown/Form Elements].
-4. Make best value editable [Pricing Table One/Pricing Table].
-5. Rearrange Folder structure.
-
-### Version 1.2.0 - [Apr 28, 2023]
-
-- Add Typescript in campus_ride React.
-
-### Version 1.0.0 - Initial Release - [Mar 13, 2023]
-
-- Initial release of campus_ride React.
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
