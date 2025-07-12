@@ -15,7 +15,7 @@ import { useSidebar } from "../context/SidebarContext";
 //   TableIcon,
 //   UserCircleIcon,
 // } from "../icons";
-
+import { Building } from "lucide-react";
 import {
   ChevronDownIcon,
   GridIcon,
@@ -111,6 +111,14 @@ const navItems: NavItem[] = [
     icon: <UserCircleIcon />,
     name: "Profile",
     path: "/profile",
+  },
+  {
+    icon: <Building />,
+    name: "Campus Management",
+    subItems: [
+      { name: "Campus Create", path: "/campus-create" },
+      { name: "Campus List", path: "/campus-list" },
+    ],
   },
   {
     icon: <ListIcon />,

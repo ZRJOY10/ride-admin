@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // <-- Add this import
+import { toast } from "react-toastify";
+import { deleteZone, updateZone } from "../../../services/zone";
+import Input from "../../form/input/InputField";
 import Badge from "../../ui/badge/Badge";
+import Button from "../../ui/button/Button";
+import { Modal } from "../../ui/modal";
 import {
   Table,
   TableBody,
@@ -25,318 +29,100 @@ const Tooltip = ({
   </span>
 );
 
-interface zone {
-  id: number;
-  zoneName: string;
-  coordinatesLeft: {
-    longitude: string;
-    latitude: string;
-  };
-  coordinatesRight: {
-    longitude: string;
-    latitude: string;
-  };
-  coordinatesTop: {
-    longitude: string;
-    latitude: string;
-  };
-  coordinatesBottom: {
-    longitude: string;
-    latitude: string;
-  };
-  status: string;
+// Update the Zone type to match your backend data
+interface Zone {
+  id: string;
+  name: string;
+  description: string;
+  coordinates: { lat: number; lng: number }[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-// Define the table data using the interface
-const tableData: zone[] = [
-  {
-    id: 1,
-    zoneName: "Shahbag",
-    coordinatesLeft: { latitude: "23.7383", longitude: "90.3952" },
-    coordinatesRight: { latitude: "23.7384", longitude: "90.3963" },
-    coordinatesTop: { latitude: "23.7390", longitude: "90.3957" },
-    coordinatesBottom: { latitude: "23.7370", longitude: "90.3950" },
-    status: "active",
-  },
-  {
-    id: 2,
-    zoneName: "TSC",
-    coordinatesLeft: { latitude: "23.7311", longitude: "90.3930" },
-    coordinatesRight: { latitude: "23.7312", longitude: "90.3945" },
-    coordinatesTop: { latitude: "23.7320", longitude: "90.3935" },
-    coordinatesBottom: { latitude: "23.7300", longitude: "90.3930" },
-    status: "active",
-  },
-  {
-    id: 3,
-    zoneName: "Shohid Minar",
-    coordinatesLeft: { latitude: "23.7289", longitude: "90.3975" },
-    coordinatesRight: { latitude: "23.7290", longitude: "90.3985" },
-    coordinatesTop: { latitude: "23.7300", longitude: "90.3980" },
-    coordinatesBottom: { latitude: "23.7280", longitude: "90.3970" },
-    status: "inactive",
-  },
-  {
-    id: 4,
-    zoneName: "Karzon Hall",
-    coordinatesLeft: { latitude: "23.7324", longitude: "90.3945" },
-    coordinatesRight: { latitude: "23.7326", longitude: "90.3958" },
-    coordinatesTop: { latitude: "23.7330", longitude: "90.3950" },
-    coordinatesBottom: { latitude: "23.7320", longitude: "90.3940" },
-    status: "active",
-  },
-  {
-    id: 5,
-    zoneName: "DU Central Library",
-    coordinatesLeft: { latitude: "23.7335", longitude: "90.3961" },
-    coordinatesRight: { latitude: "23.7337", longitude: "90.3970" },
-    coordinatesTop: { latitude: "23.7340", longitude: "90.3965" },
-    coordinatesBottom: { latitude: "23.7330", longitude: "90.3960" },
-    status: "inactive",
-  },
-  {
-    id: 6,
-    zoneName: "Curzon Gate",
-    coordinatesLeft: { latitude: "23.7338", longitude: "90.3934" },
-    coordinatesRight: { latitude: "23.7340", longitude: "90.3945" },
-    coordinatesTop: { latitude: "23.7345", longitude: "90.3940" },
-    coordinatesBottom: { latitude: "23.7335", longitude: "90.3930" },
-    status: "active",
-  },
-  {
-    id: 7,
-    zoneName: "Teacher Student Center",
-    coordinatesLeft: { latitude: "23.7309", longitude: "90.3920" },
-    coordinatesRight: { latitude: "23.7311", longitude: "90.3930" },
-    coordinatesTop: { latitude: "23.7315", longitude: "90.3925" },
-    coordinatesBottom: { latitude: "23.7305", longitude: "90.3920" },
-    status: "active",
-  },
-  {
-    id: 8,
-    zoneName: "Bangla Academy",
-    coordinatesLeft: { latitude: "23.7315", longitude: "90.4010" },
-    coordinatesRight: { latitude: "23.7317", longitude: "90.4020" },
-    coordinatesTop: { latitude: "23.7320", longitude: "90.4015" },
-    coordinatesBottom: { latitude: "23.7310", longitude: "90.4010" },
-    status: "inactive",
-  },
-  {
-    id: 9,
-    zoneName: "National Museum",
-    coordinatesLeft: { latitude: "23.7395", longitude: "90.3955" },
-    coordinatesRight: { latitude: "23.7397", longitude: "90.3965" },
-    coordinatesTop: { latitude: "23.7400", longitude: "90.3960" },
-    coordinatesBottom: { latitude: "23.7390", longitude: "90.3950" },
-    status: "active",
-  },
-  {
-    id: 10,
-    zoneName: "FBS Dhaka University",
-    coordinatesLeft: { latitude: "23.7328", longitude: "90.3928" },
-    coordinatesRight: { latitude: "23.7330", longitude: "90.3940" },
-    coordinatesTop: { latitude: "23.7335", longitude: "90.3935" },
-    coordinatesBottom: { latitude: "23.7325", longitude: "90.3925" },
-    status: "active",
-  },
-  {
-    id: 11,
-    zoneName: "DU Gymnasium",
-    coordinatesLeft: { latitude: "23.7295", longitude: "90.3955" },
-    coordinatesRight: { latitude: "23.7297", longitude: "90.3965" },
-    coordinatesTop: { latitude: "23.7300", longitude: "90.3960" },
-    coordinatesBottom: { latitude: "23.7290", longitude: "90.3950" },
-    status: "inactive",
-  },
-  {
-    id: 12,
-    zoneName: "Institute of Education and Research",
-    coordinatesLeft: { latitude: "23.7350", longitude: "90.3942" },
-    coordinatesRight: { latitude: "23.7352", longitude: "90.3952" },
-    coordinatesTop: { latitude: "23.7355", longitude: "90.3947" },
-    coordinatesBottom: { latitude: "23.7345", longitude: "90.3940" },
-    status: "active",
-  },
-  {
-    id: 13,
-    zoneName: "Science Annex Building",
-    coordinatesLeft: { latitude: "23.7360", longitude: "90.3933" },
-    coordinatesRight: { latitude: "23.7362", longitude: "90.3944" },
-    coordinatesTop: { latitude: "23.7365", longitude: "90.3938" },
-    coordinatesBottom: { latitude: "23.7355", longitude: "90.3932" },
-    status: "inactive",
-  },
-  {
-    id: 14,
-    zoneName: "Nabab Nawab Ali Chowdhury Senate Building",
-    coordinatesLeft: { latitude: "23.7355", longitude: "90.3915" },
-    coordinatesRight: { latitude: "23.7357", longitude: "90.3925" },
-    coordinatesTop: { latitude: "23.7360", longitude: "90.3920" },
-    coordinatesBottom: { latitude: "23.7350", longitude: "90.3910" },
-    status: "active",
-  },
-  {
-    id: 15,
-    zoneName: "Central Playground DU",
-    coordinatesLeft: { latitude: "23.7368", longitude: "90.3902" },
-    coordinatesRight: { latitude: "23.7370", longitude: "90.3913" },
-    coordinatesTop: { latitude: "23.7375", longitude: "90.3907" },
-    coordinatesBottom: { latitude: "23.7365", longitude: "90.3900" },
-    status: "active",
-  },
-  {
-    id: 1,
-    zoneName: "Shahbag",
-    coordinatesLeft: { latitude: "23.7383", longitude: "90.3952" },
-    coordinatesRight: { latitude: "23.7384", longitude: "90.3963" },
-    coordinatesTop: { latitude: "23.7390", longitude: "90.3957" },
-    coordinatesBottom: { latitude: "23.7370", longitude: "90.3950" },
-    status: "active",
-  },
-  {
-    id: 2,
-    zoneName: "TSC",
-    coordinatesLeft: { latitude: "23.7311", longitude: "90.3930" },
-    coordinatesRight: { latitude: "23.7312", longitude: "90.3945" },
-    coordinatesTop: { latitude: "23.7320", longitude: "90.3935" },
-    coordinatesBottom: { latitude: "23.7300", longitude: "90.3930" },
-    status: "active",
-  },
-  {
-    id: 3,
-    zoneName: "Shohid Minar",
-    coordinatesLeft: { latitude: "23.7289", longitude: "90.3975" },
-    coordinatesRight: { latitude: "23.7290", longitude: "90.3985" },
-    coordinatesTop: { latitude: "23.7300", longitude: "90.3980" },
-    coordinatesBottom: { latitude: "23.7280", longitude: "90.3970" },
-    status: "inactive",
-  },
-  {
-    id: 4,
-    zoneName: "Karzon Hall",
-    coordinatesLeft: { latitude: "23.7324", longitude: "90.3945" },
-    coordinatesRight: { latitude: "23.7326", longitude: "90.3958" },
-    coordinatesTop: { latitude: "23.7330", longitude: "90.3950" },
-    coordinatesBottom: { latitude: "23.7320", longitude: "90.3940" },
-    status: "active",
-  },
-  {
-    id: 5,
-    zoneName: "DU Central Library",
-    coordinatesLeft: { latitude: "23.7335", longitude: "90.3961" },
-    coordinatesRight: { latitude: "23.7337", longitude: "90.3970" },
-    coordinatesTop: { latitude: "23.7340", longitude: "90.3965" },
-    coordinatesBottom: { latitude: "23.7330", longitude: "90.3960" },
-    status: "inactive",
-  },
-  {
-    id: 6,
-    zoneName: "Curzon Gate",
-    coordinatesLeft: { latitude: "23.7338", longitude: "90.3934" },
-    coordinatesRight: { latitude: "23.7340", longitude: "90.3945" },
-    coordinatesTop: { latitude: "23.7345", longitude: "90.3940" },
-    coordinatesBottom: { latitude: "23.7335", longitude: "90.3930" },
-    status: "active",
-  },
-  {
-    id: 7,
-    zoneName: "Teacher Student Center",
-    coordinatesLeft: { latitude: "23.7309", longitude: "90.3920" },
-    coordinatesRight: { latitude: "23.7311", longitude: "90.3930" },
-    coordinatesTop: { latitude: "23.7315", longitude: "90.3925" },
-    coordinatesBottom: { latitude: "23.7305", longitude: "90.3920" },
-    status: "active",
-  },
-  {
-    id: 8,
-    zoneName: "Bangla Academy",
-    coordinatesLeft: { latitude: "23.7315", longitude: "90.4010" },
-    coordinatesRight: { latitude: "23.7317", longitude: "90.4020" },
-    coordinatesTop: { latitude: "23.7320", longitude: "90.4015" },
-    coordinatesBottom: { latitude: "23.7310", longitude: "90.4010" },
-    status: "inactive",
-  },
-  {
-    id: 9,
-    zoneName: "National Museum",
-    coordinatesLeft: { latitude: "23.7395", longitude: "90.3955" },
-    coordinatesRight: { latitude: "23.7397", longitude: "90.3965" },
-    coordinatesTop: { latitude: "23.7400", longitude: "90.3960" },
-    coordinatesBottom: { latitude: "23.7390", longitude: "90.3950" },
-    status: "active",
-  },
-  {
-    id: 10,
-    zoneName: "FBS Dhaka University",
-    coordinatesLeft: { latitude: "23.7328", longitude: "90.3928" },
-    coordinatesRight: { latitude: "23.7330", longitude: "90.3940" },
-    coordinatesTop: { latitude: "23.7335", longitude: "90.3935" },
-    coordinatesBottom: { latitude: "23.7325", longitude: "90.3925" },
-    status: "active",
-  },
-  {
-    id: 11,
-    zoneName: "DU Gymnasium",
-    coordinatesLeft: { latitude: "23.7295", longitude: "90.3955" },
-    coordinatesRight: { latitude: "23.7297", longitude: "90.3965" },
-    coordinatesTop: { latitude: "23.7300", longitude: "90.3960" },
-    coordinatesBottom: { latitude: "23.7290", longitude: "90.3950" },
-    status: "inactive",
-  },
-  {
-    id: 12,
-    zoneName: "Institute of Education and Research",
-    coordinatesLeft: { latitude: "23.7350", longitude: "90.3942" },
-    coordinatesRight: { latitude: "23.7352", longitude: "90.3952" },
-    coordinatesTop: { latitude: "23.7355", longitude: "90.3947" },
-    coordinatesBottom: { latitude: "23.7345", longitude: "90.3940" },
-    status: "active",
-  },
-  {
-    id: 13,
-    zoneName: "Science Annex Building",
-    coordinatesLeft: { latitude: "23.7360", longitude: "90.3933" },
-    coordinatesRight: { latitude: "23.7362", longitude: "90.3944" },
-    coordinatesTop: { latitude: "23.7365", longitude: "90.3938" },
-    coordinatesBottom: { latitude: "23.7355", longitude: "90.3932" },
-    status: "inactive",
-  },
-  {
-    id: 14,
-    zoneName: "Nabab Nawab Ali Chowdhury Senate Building",
-    coordinatesLeft: { latitude: "23.7355", longitude: "90.3915" },
-    coordinatesRight: { latitude: "23.7357", longitude: "90.3925" },
-    coordinatesTop: { latitude: "23.7360", longitude: "90.3920" },
-    coordinatesBottom: { latitude: "23.7350", longitude: "90.3910" },
-    status: "active",
-  },
-  {
-    id: 15,
-    zoneName: "Central Playground DU",
-    coordinatesLeft: { latitude: "23.7368", longitude: "90.3902" },
-    coordinatesRight: { latitude: "23.7370", longitude: "90.3913" },
-    coordinatesTop: { latitude: "23.7375", longitude: "90.3907" },
-    coordinatesBottom: { latitude: "23.7365", longitude: "90.3900" },
-    status: "active",
-  },
-];
+interface ZoneTableListProps {
+  zones: Zone[];
+  rows?: number;
+}
 
-const rowsPerPage = 5;
-
-export default function ZoneTableList() {
+export default function ZoneTableList({ zones, rows }: ZoneTableListProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(tableData.length / rowsPerPage);
-  const navigate = useNavigate(); // <-- Add this line
+  const rowsPerPage = rows || 5;
+  const totalPages = Math.ceil((zones?.length || 0) / rowsPerPage);
+
+  // Modal state
+  const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editZone, setEditZone] = useState<Zone | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
-  const handleView = (zone: zone) => {
-    navigate("/zone-view", { state: { zone } });
+  const handleView = (zone: Zone) => {
+    setSelectedZone(zone);
+    setEditMode(false);
+    setEditZone(null);
   };
 
-  const paginatedData = tableData.slice(
+  const handleEdit = () => {
+    setEditMode(true);
+    setEditZone(selectedZone);
+  };
+
+  const handleEditChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    idx?: number,
+    coordField?: "lat" | "lng"
+  ) => {
+    if (editZone && typeof idx === "number" && coordField) {
+      const newCoords = editZone.coordinates.map((c, i) =>
+        i === idx ? { ...c, [coordField]: Number(e.target.value) } : c
+      );
+      setEditZone({ ...editZone, coordinates: newCoords });
+    } else if (editZone) {
+      setEditZone({ ...editZone, [e.target.name]: e.target.value });
+    }
+  };
+
+  const handleSave = async () => {
+    if (!editZone) return;
+    setLoading(true);
+    try {
+      await updateZone(editZone.id, {
+        name: editZone.name,
+        description: editZone.description,
+        coordinates: editZone.coordinates,
+        campusId: editZone.id, // Pass the correct campusId here
+      });
+      toast.success("Zone updated successfully!");
+      setSelectedZone(editZone);
+      setEditMode(false);
+    } catch {
+      toast.error("Failed to update zone.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedZone) return;
+    if (!window.confirm("Are you sure you want to delete this zone?")) return;
+    setLoading(true);
+    try {
+      await deleteZone(selectedZone.id);
+      toast.success("Zone deleted successfully!");
+      setSelectedZone(null);
+      // Optionally, refresh the list here by calling parent fetch or removing from zones array
+    } catch {
+      toast.error("Failed to delete zone.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const paginatedData = zones.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -399,7 +185,6 @@ export default function ZoneTableList() {
                 </TableCell>
               </TableRow>
             </TableHeader>
-
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {paginatedData.map((zone, idx) => (
@@ -416,57 +201,58 @@ export default function ZoneTableList() {
                     <div className="flex items-center gap-3">
                       <div>
                         <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                          {zone.zoneName}
+                          {zone.name}
                         </span>
                       </div>
                     </div>
                   </TableCell>
+                  {/* Coordinates: 0=Left, 1=Right, 2=Top, 3=Bottom */}
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <div>
                       <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        lat - {zone.coordinatesLeft.latitude}
+                        lat - {zone.coordinates[0]?.lat}
                       </span>
                       <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                        lng - {zone.coordinatesLeft.longitude}
+                        lng - {zone.coordinates[0]?.lng}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <div>
                       <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        lat - {zone.coordinatesRight.latitude}
+                        lat - {zone.coordinates[1]?.lat}
                       </span>
                       <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                        lng - {zone.coordinatesRight.longitude}
+                        lng - {zone.coordinates[1]?.lng}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <div>
                       <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        lat - {zone.coordinatesTop.latitude}
+                        lat - {zone.coordinates[2]?.lat}
                       </span>
                       <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                        lng - {zone.coordinatesTop.longitude}
+                        lng - {zone.coordinates[2]?.lng}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <div>
                       <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        lat - {zone.coordinatesBottom.latitude}
+                        lat - {zone.coordinates[3]?.lat}
                       </span>
                       <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                        lng - {zone.coordinatesBottom.longitude}
+                        lng - {zone.coordinates[3]?.lng}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 capitalize text-start text-theme-sm dark:text-gray-400">
                     <Badge
                       size="sm"
-                      color={zone.status === "active" ? "success" : "error"}
+                      color={zone.isActive ? "success" : "error"}
                     >
-                      {zone.status}
+                      {zone.isActive ? "Active" : "Inactive"}
                     </Badge>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
@@ -522,19 +308,16 @@ export default function ZoneTableList() {
             Previous
           </button>
           {(() => {
-            // Calculate page numbers to show: current, previous 2, next 2
             const pages = [];
             const start = Math.max(1, currentPage - 2);
             const end = Math.min(totalPages, currentPage + 2);
             for (let i = start; i <= end; i++) {
               pages.push(i);
             }
-            // Add first page and ellipsis if needed
             if (start > 1) {
               pages.unshift("...");
               pages.unshift(1);
             }
-            // Add last page and ellipsis if needed
             if (end < totalPages) {
               pages.push("...");
               pages.push(totalPages);
@@ -571,6 +354,132 @@ export default function ZoneTableList() {
           </button>
         </nav>
       </div>
+
+      {/* Zone Details Modal */}
+      <Modal
+        isOpen={!!selectedZone}
+        onClose={() => {
+          setSelectedZone(null);
+          setEditMode(false);
+          setEditZone(null);
+        }}
+        className="max-w-lg w-full m-4"
+      >
+        {selectedZone && !editMode && (
+          <div className="p-6">
+            <h2 className="text-xl font-bold mb-4">{selectedZone.name}</h2>
+            <div className="mb-2">
+              <span className="font-semibold">Description: </span>
+              {selectedZone.description}
+            </div>
+            <div className="mb-2">
+              <span className="font-semibold">Status: </span>
+              <Badge
+                size="sm"
+                color={selectedZone.isActive ? "success" : "error"}
+              >
+                {selectedZone.isActive ? "Active" : "Inactive"}
+              </Badge>
+            </div>
+            <div className="mb-2">
+              <span className="font-semibold">Coordinates:</span>
+              <ul className="ml-4 list-disc">
+                {selectedZone.coordinates.map((c, i) => (
+                  <li key={i}>
+                    <span className="font-semibold">Point {i + 1}:</span> lat:{" "}
+                    {c.lat}, lng: {c.lng}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <Button variant="outline" onClick={handleEdit}>
+                Edit
+              </Button>
+              <Button
+                className="bg-red-600 text-white"
+                onClick={handleDelete}
+                disabled={loading}
+              >
+                {loading ? "Deleting..." : "Delete"}
+              </Button>
+              <Button variant="outline" onClick={() => setSelectedZone(null)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
+        {selectedZone && editMode && editZone && (
+          <form
+            className="p-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSave();
+            }}
+          >
+            <h2 className="text-xl font-bold mb-4">Edit {editZone.name}</h2>
+            <div className="mb-2">
+              <label className="font-semibold block mb-1">Zone Name:</label>
+              <Input
+                name="name"
+                value={editZone.name}
+                onChange={handleEditChange}
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="font-semibold block mb-1">Description:</label>
+              <Input
+                name="description"
+                value={editZone.description}
+                onChange={handleEditChange}
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="font-semibold block mb-1">Coordinates:</label>
+              <div className="space-y-1">
+                {editZone.coordinates.map((c, i) => (
+                  <div key={i} className="flex gap-2 items-center">
+                    <span className="text-xs text-gray-500">Point {i + 1}</span>
+                    <Input
+                      type="number"
+                      value={c.lat}
+                      onChange={(e) => handleEditChange(e, i, "lat")}
+                      required
+                      className="w-24"
+                    />
+                    <Input
+                      type="number"
+                      value={c.lng}
+                      onChange={(e) => handleEditChange(e, i, "lng")}
+                      required
+                      className="w-24"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <Button
+                type="submit"
+                variant="outline"
+                className="border-brand-500 text-brand-600"
+                disabled={loading}
+              >
+                {loading ? "Saving..." : "Save"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setEditMode(false)}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        )}
+      </Modal>
     </div>
   );
 }

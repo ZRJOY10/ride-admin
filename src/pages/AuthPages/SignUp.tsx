@@ -6,8 +6,8 @@ export default function SignUp() {
   return (
     <>
       <PageMeta
-        title="React.js SignUp Dashboard ."
-        description="This is React.js SignUp Tables Dashboard page for campus_ride - React.js Tailwind CSS Admin Dashboard Template"
+        title="Sign Up - cholBhai Admin Dashboard"
+        description="Create a new account for cholBhai Admin Dashboard"
       />
       <AuthLayout>
         <SignUpForm />

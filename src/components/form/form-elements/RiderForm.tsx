@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { createRider } from "../../../services/rider";
 import ComponentCard from "../../common/ComponentCard";
 import Button from "../../ui/button/Button";
 import Input from "../input/InputField";
@@ -11,17 +13,19 @@ type FilePreview = {
 
 export default function RiderForm() {
   const [form, setForm] = useState({
-    name: "",
-    fullName: "",
-    userName: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
     nidFront: null as File | null,
     nidBack: null as File | null,
-    drivingLicenceFront: null as File | null,
-    drivingLicenceBack: null as File | null,
-    bikeLicenceFront: null as File | null,
-    bikeLicenceBack: null as File | null,
     universityIdFront: null as File | null,
     universityIdBack: null as File | null,
+    drivingLicense: null as File | null,
+    vehicleLicense: null as File | null,
+    numberPlateImage: null as File | null,
+    bikeRegistrationNumber: "",
+    bikeModel: "",
   });
 
   const [previews, setPreviews] = useState<Record<string, FilePreview>>({});
@@ -47,13 +51,39 @@ export default function RiderForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Submit logic here
-    alert("Rider created!");
+    try {
+      const formData = new FormData();
+      formData.append("firstName", form.firstName);
+      formData.append("lastName", form.lastName);
+      formData.append("email", form.email);
+      formData.append("phoneNumber", form.phoneNumber);
+
+      if (form.nidFront) formData.append("nidFront", form.nidFront);
+      if (form.nidBack) formData.append("nidBack", form.nidBack);
+      if (form.universityIdFront)
+        formData.append("universityIdFront", form.universityIdFront);
+      if (form.universityIdBack)
+        formData.append("universityIdBack", form.universityIdBack);
+      if (form.drivingLicense)
+        formData.append("drivingLicense", form.drivingLicense);
+      if (form.vehicleLicense)
+        formData.append("vehicleLicense", form.vehicleLicense);
+      if (form.numberPlateImage)
+        formData.append("numberPlateImage", form.numberPlateImage);
+      if (form.bikeRegistrationNumber)
+        formData.append("bikeRegistrationNumber", form.bikeRegistrationNumber);
+      if (form.bikeModel) formData.append("bikeModel", form.bikeModel);
+
+      await createRider(formData);
+      toast.success("Rider created!");
+    } catch (error) {
+      toast.error("Failed to create rider!");
+      console.error("Error creating rider:", error);
+    }
   };
 
-  // Helper for rendering file input with preview
   const renderFileInput = (label: string, name: keyof typeof form) => (
     <div>
       <Label>
@@ -95,41 +125,55 @@ export default function RiderForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="name">
-              Name <span className="text-red-500">*</span>
+            <Label htmlFor="firstName">
+              First Name <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="name"
-              name="name"
-              value={form.name}
+              id="firstName"
+              name="firstName"
+              value={form.firstName}
               onChange={handleChange}
-              placeholder="Enter name"
+              placeholder="Enter first name"
               required
             />
           </div>
           <div>
-            <Label htmlFor="fullName">
-              Full Name <span className="text-red-500">*</span>
+            <Label htmlFor="lastName">
+              Last Name <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="fullName"
-              name="fullName"
-              value={form.fullName}
+              id="lastName"
+              name="lastName"
+              value={form.lastName}
               onChange={handleChange}
-              placeholder="Enter full name"
+              placeholder="Enter last name"
               required
             />
           </div>
           <div>
-            <Label htmlFor="userName">
-              User Name <span className="text-red-500">*</span>
+            <Label htmlFor="email">
+              Email <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="userName"
-              name="userName"
-              value={form.userName}
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
               onChange={handleChange}
-              placeholder="Enter user name"
+              placeholder="Enter email"
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="phoneNumber">
+              Phone Number <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="phoneNumber"
+              name="phoneNumber"
+              value={form.phoneNumber}
+              onChange={handleChange}
+              placeholder="Enter phone number"
               required
             />
           </div>
@@ -140,16 +184,39 @@ export default function RiderForm() {
           {renderFileInput("NID Back", "nidBack")}
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {renderFileInput("Driving Licence Front", "drivingLicenceFront")}
-          {renderFileInput("Driving Licence Back", "drivingLicenceBack")}
-        </div>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {renderFileInput("Bike Licence Front", "bikeLicenceFront")}
-          {renderFileInput("Bike Licence Back", "bikeLicenceBack")}
-        </div>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {renderFileInput("University ID Card Front", "universityIdFront")}
           {renderFileInput("University ID Card Back", "universityIdBack")}
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {renderFileInput("Driving License", "drivingLicense")}
+          {renderFileInput("Vehicle License", "vehicleLicense")}
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {renderFileInput("Number Plate Image", "numberPlateImage")}
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div>
+            <Label htmlFor="bikeRegistrationNumber">
+              Bike Registration Number
+            </Label>
+            <Input
+              id="bikeRegistrationNumber"
+              name="bikeRegistrationNumber"
+              value={form.bikeRegistrationNumber}
+              onChange={handleChange}
+              placeholder="Enter bike registration number"
+            />
+          </div>
+          <div>
+            <Label htmlFor="bikeModel">Bike Model</Label>
+            <Input
+              id="bikeModel"
+              name="bikeModel"
+              value={form.bikeModel}
+              onChange={handleChange}
+              placeholder="Enter bike model"
+            />
+          </div>
         </div>
         <Button size="md" variant="primary" type="submit">
           Create Rider

@@ -5,6 +5,8 @@ import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import Blank from "./pages/Blank";
 import Calendar from "./pages/Calendar";
+import CampusCreate from "./pages/CampusPages/CampusCreate";
+import CampusList from "./pages/CampusPages/CampusList";
 import BarChart from "./pages/Charts/BarChart";
 import LineChart from "./pages/Charts/LineChart";
 import Home from "./pages/Dashboard/Home";
@@ -37,6 +39,10 @@ export default function App() {
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
+
+            {/* Campus Management */}
+            <Route path="/campus-create" element={<CampusCreate />} />
+            <Route path="/campus-list" element={<CampusList />} />
 
             {/* Zone Management */}
             <Route path="/zone-create" element={<ZoneCreate />} />
